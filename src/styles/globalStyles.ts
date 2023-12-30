@@ -20,5 +20,16 @@ export const globalStyles = StyleSheet.create({
         fontSize: 14,
         fontFamily: fontFamilies.regular,
         color: colors.text,
+    },
+
+    inputContainer: {
+        backgroundColor: colors.gray,
+        borderRadius: 12,
+        paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+        paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+    },
+
+    section: {
+        marginBottom: 16,
     }
 });
