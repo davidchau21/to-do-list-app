@@ -12,10 +12,10 @@ import {Element4, Notification, SearchNormal1} from 'iconsax-react-native';
 import TagComponent from '../components/TagComponent';
 import SpaceComponent from '../components/SpaceComponent';
 import CircularComponent from '../components/CircularComponent';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
+
 
 const HomeScreen = () => {
-  const fill = 80;
+  
   return (
     <Container>
       <SectionComponent>
@@ -51,20 +51,8 @@ const HomeScreen = () => {
               </RowComponent>
             </View>
             <View>
-              {/* <CircularComponent value={80} /> */}
-              <AnimatedCircularProgress
-                size={80}
-                width={8}
-                fill={fill}
-                tintColor="blue"
-                backgroundColor="#3d5875">
-                {() => (
-                  <View
-                    style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{color: colors.text}}>{`${fill}%`}</Text>
-                  </View>
-                )}
-              </AnimatedCircularProgress>
+              <CircularComponent value={80} />
+              
             </View>
           </RowComponent>
         </CardComponent>
