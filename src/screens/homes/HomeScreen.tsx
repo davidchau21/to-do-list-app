@@ -6,14 +6,14 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import Container from '../components/Container';
-import {globalStyles} from '../styles/globalStyles';
-import RowComponent from '../components/RowComponent';
-import SectionComponent from '../components/SectionComponent';
-import TextComponent from '../components/TextComponent';
-import TitleComponent from '../components/TitleComponent';
-import {colors} from '../constants/colors';
-import CardComponent from '../components/CardComponent';
+import Container from '../../components/Container';
+import {globalStyles} from '../../styles/globalStyles';
+import RowComponent from '../../components/RowComponent';
+import SectionComponent from '../../components/SectionComponent';
+import TextComponent from '../../components/TextComponent';
+import TitleComponent from '../../components/TitleComponent';
+import {colors} from '../../constants/colors';
+import CardComponent from '../../components/CardComponent';
 import {
   Add,
   Edit2,
@@ -21,15 +21,15 @@ import {
   Notification,
   SearchNormal1,
 } from 'iconsax-react-native';
-import TagComponent from '../components/TagComponent';
-import SpaceComponent from '../components/SpaceComponent';
-import CircularComponent from '../components/CircularComponent';
-import CartImageComponent from '../components/CartImageComponent';
-import AvatarGroup from '../components/AvatarGroup';
-import ProgressBarComponent from '../components/ProgressBarComponent';
-import {fontFamilies} from '../constants/fontFamillies';
+import TagComponent from '../../components/TagComponent';
+import SpaceComponent from '../../components/SpaceComponent';
+import CircularComponent from '../../components/CircularComponent';
+import CartImageComponent from '../../components/CartImageComponent';
+import AvatarGroup from '../../components/AvatarGroup';
+import ProgressBarComponent from '../../components/ProgressBarComponent';
+import {fontFamilies} from '../../constants/fontFamillies';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}: any) => {
   return (
     <View style={{flex: 1}}>
       <Container>
@@ -177,6 +177,7 @@ const HomeScreen = () => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
+        onPress={() => navigation.navigate('AddNewTask')}
           activeOpacity={1}
           style={[
             globalStyles.row,
