@@ -11,7 +11,7 @@ interface Props {
 
 const Container = (props: Props) => {
   const {title, back, right, children} = props;
-  return <ScrollView style={[globalStyles.container]}>{children}</ScrollView>
+  return <ScrollView style={[globalStyles.container, {paddingVertical: 15}]}>{children}</ScrollView>
 };
 
 export default Container;

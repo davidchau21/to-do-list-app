@@ -6,7 +6,6 @@ export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bgColor,
-    paddingTop: Platform.OS === 'ios' ? 52 : 42,
   },
 
   row: {
