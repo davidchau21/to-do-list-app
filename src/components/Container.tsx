@@ -12,17 +12,18 @@ import {ArrowLeft2} from 'iconsax-react-native';
 import {colors} from '../constants/colors';
 import TextComponent from './TextComponent';
 import {fontFamilies} from '../constants/fontFamillies';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   title?: string;
   back?: boolean;
   right?: ReactNode;
   children: ReactNode;
+  isScroll?: boolean;
 }
 
 const Container = (props: Props) => {
-  const {title, back, right, children} = props;
+  const {title, back, right, children, isScroll} = props;
   const navigation: any = useNavigation();
   return (
     <View style={[globalStyles.container]}>
@@ -50,7 +51,11 @@ const Container = (props: Props) => {
           )}
         </View>
       </RowComponent>
-      <ScrollView style={{flex: 1}}>{children}</ScrollView>
+      {isScroll ? (
+        <ScrollView style={{flex: 1}}>{children}</ScrollView>
+      ) : (
+        <View style={{flex: 1}}>{children}</View>
+      )}
     </View>
   );
 };

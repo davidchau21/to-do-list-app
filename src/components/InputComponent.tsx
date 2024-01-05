@@ -5,12 +5,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useState} from 'react';
 import TitleComponent from './TitleComponent';
 import RowComponent from './RowComponent';
 import {globalStyles} from '../styles/globalStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {colors} from '../constants/colors';
+import {Eye, EyeSlash} from 'iconsax-react-native';
 
 interface Props {
   value: string;
@@ -22,9 +23,12 @@ interface Props {
   allowClear?: boolean;
   multible?: boolean;
   numberOfLines?: number;
+  isPassword?: boolean;
 }
 
+
 const InputComponent = (props: Props) => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     value,
     onChange,
@@ -35,6 +39,7 @@ const InputComponent = (props: Props) => {
     allowClear,
     multible,
     numberOfLines,
+    isPassword,
   } = props;
 
   return (
@@ -48,7 +53,7 @@ const InputComponent = (props: Props) => {
             minHeight: multible && numberOfLines ? 32 * numberOfLines : 32,
             paddingVertical: 14,
             paddingHorizontal: 10,
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
           },
         ]}>
         {prefix && prefix}
@@ -69,6 +74,8 @@ const InputComponent = (props: Props) => {
             onChangeText={val => onChange(val)}
             multiline={multible}
             numberOfLines={numberOfLines}
+            secureTextEntry={isPassword ? !showPassword : false}
+            autoCapitalize='none'
           />
         </View>
         {afflix && afflix}
@@ -76,6 +83,16 @@ const InputComponent = (props: Props) => {
         {allowClear && value && (
           <TouchableOpacity onPress={() => onChange('')}>
             <AntDesign name="close" size={20} color={colors.white} />
+          </TouchableOpacity>
+        )}
+
+        {isPassword && (
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            {showPassword ? (
+              <EyeSlash size={20} color={colors.desc} />
+            ) : (
+              <Eye size={20} color={colors.desc} />
+            )}
           </TouchableOpacity>
         )}
       </RowComponent>

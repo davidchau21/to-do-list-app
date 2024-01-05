@@ -18,6 +18,7 @@ import {
   Add,
   Edit2,
   Element4,
+  Logout,
   Notification,
   SearchNormal1,
 } from 'iconsax-react-native';
@@ -28,11 +29,13 @@ import CartImageComponent from '../../components/CartImageComponent';
 import AvatarGroup from '../../components/AvatarGroup';
 import ProgressBarComponent from '../../components/ProgressBarComponent';
 import {fontFamilies} from '../../constants/fontFamillies';
+import auth from '@react-native-firebase/auth';
 
 const HomeScreen = ({navigation}: any) => {
+  const user = auth().currentUser;
   return (
     <View style={{flex: 1}}>
-      <Container>
+      <Container isScroll>
         <SectionComponent>
           <RowComponent justify="space-between">
             <Element4 color={colors.desc} size={24} />
@@ -40,8 +43,15 @@ const HomeScreen = ({navigation}: any) => {
           </RowComponent>
         </SectionComponent>
         <SectionComponent>
-          <TextComponent text="Hi, Jason" />
-          <TitleComponent text="Be productive today" />
+          <RowComponent>
+            <View style={{flex: 1}}>
+              <TextComponent text={`Hi, ${user?.email}`} />
+              <TitleComponent text="Be productive today" />
+            </View>
+            <TouchableOpacity onPress={async () => auth().signOut()}>
+              <Logout size={24} color={colors.desc} />
+            </TouchableOpacity>
+          </RowComponent>
         </SectionComponent>
         <SectionComponent>
           <RowComponent
@@ -177,7 +187,7 @@ const HomeScreen = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
-        onPress={() => navigation.navigate('AddNewTask')}
+          onPress={() => navigation.navigate('AddNewTask')}
           activeOpacity={1}
           style={[
             globalStyles.row,
@@ -192,7 +202,6 @@ const HomeScreen = ({navigation}: any) => {
           <Add size={24} color={colors.white} />
         </TouchableOpacity>
       </View>
-      
     </View>
   );
 };
