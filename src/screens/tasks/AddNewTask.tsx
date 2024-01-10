@@ -123,8 +123,6 @@ const AddNewTask = ({navigation}: any) => {
         console.log(err);
       });
   };
-
-  console.log(attachmentsUrl);
   
 
   return (

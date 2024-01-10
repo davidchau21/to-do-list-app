@@ -5,7 +5,12 @@ import TextComponent from './TextComponent';
 import {colors} from '../constants/colors';
 import { fontFamilies } from '../constants/fontFamillies';
 
-const AvatarGroup = () => {
+interface Props {
+  uids: string[];
+}
+
+const AvatarGroup = (props: Props) => {
+  const {uids} = props;
   const uidsLength = 10;
   const imageUrl =
     'https://bizweb.dktcdn.net/100/438/408/files/avatar-dep-cho-nam-yody-vn10.jpg?v=1683516432549';
