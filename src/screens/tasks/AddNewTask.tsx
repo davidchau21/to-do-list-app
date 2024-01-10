@@ -4,7 +4,7 @@ import TextComponent from '../../components/TextComponent';
 import {TaskModel} from '../../models/TaskModel';
 import SectionComponent from '../../components/SectionComponent';
 import InputComponent from '../../components/InputComponent';
-import {User} from 'iconsax-react-native';
+import {AttachSquare, User} from 'iconsax-react-native';
 import {colors} from '../../constants/colors';
 import {Button, View} from 'react-native';
 import DateTimePickerComponent from '../../components/DateTimePickerComponent';
@@ -13,6 +13,13 @@ import SpaceComponent from '../../components/SpaceComponent';
 import DropdownPicker from '../../components/DropdownPicker';
 import {SelectModel} from '../../models/SelectModel';
 import firestore from '@react-native-firebase/firestore';
+import ButtonComponent from '../../components/ButtonComponent';
+import TitleComponent from '../../components/TitleComponent';
+import DocumentPicker, {
+  DocumentPickerOptions,
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import storage from '@react-native-firebase/storage';
 
 const initValue: TaskModel = {
   title: '',
@@ -27,6 +34,9 @@ const initValue: TaskModel = {
 const AddNewTask = ({navigation}: any) => {
   const [taskDetail, setTaskDetail] = useState<TaskModel>(initValue);
   const [usersSelect, setUsersSelect] = useState<SelectModel[]>([]);
+  const [attachments, setAttachments] = useState<DocumentPickerResponse[]>([]);
+  const [attachmentsUrl, setAttachmentsUrl] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     handleGetAllUsers();
@@ -55,7 +65,7 @@ const AddNewTask = ({navigation}: any) => {
         console.log(`Can not get users: ${error.message}`);
       });
   };
-  const handleChangeValue = (id: string, value: string| string[] | Date) => {
+  const handleChangeValue = (id: string, value: string | string[] | Date) => {
     const item: any = {...taskDetail};
 
     item[`${id}`] = value;
@@ -64,8 +74,58 @@ const AddNewTask = ({navigation}: any) => {
   };
 
   const handleAddNewTask = async () => {
-    console.log(taskDetail);
+    const data = {
+      ...taskDetail,
+      flieUrl: attachmentsUrl,
+    };
+
+    await firestore()
+      .collection('task')
+      .add(data)
+      .then(() => {
+        console.log('Add new task success');
+        navigation.goBack();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
+
+  const handlePickerDocument = async () => {
+    DocumentPicker.pick({})
+      .then(res => {
+        setAttachments(res);
+
+        res.forEach(item => {
+          handleUploadFileToStorage(item);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const handleUploadFileToStorage = async (item: DocumentPickerResponse) => {
+    const filename = item.name ?? `file${Date.now()}`;
+    const path = `documents/${filename}`;
+    const items = [...attachmentsUrl];
+
+    await storage().ref(path).putFile(item.uri);
+
+    await storage()
+      .ref(path)
+      .getDownloadURL()
+      .then(url => {
+        items.push(url);
+        setAttachmentsUrl(items);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  console.log(attachmentsUrl);
+  
 
   return (
     <Container back title="Add new task">
@@ -76,7 +136,10 @@ const AddNewTask = ({navigation}: any) => {
           title="Title"
           allowClear
           placeholder="Title of task"
+          multible
+          numberOfLines={2}
         />
+        <SpaceComponent height={10} />
         <InputComponent
           value={taskDetail.description}
           onChange={val => handleChangeValue('description', val)}
@@ -98,7 +161,7 @@ const AddNewTask = ({navigation}: any) => {
             <DateTimePickerComponent
               type="time"
               selected={taskDetail.start}
-              onSelect={val => handleChangeValue('', val)}
+              onSelect={val => handleChangeValue('start', val)}
               title="Start"
             />
           </View>
@@ -107,7 +170,7 @@ const AddNewTask = ({navigation}: any) => {
             <DateTimePickerComponent
               type="time"
               selected={taskDetail.end}
-              onSelect={val => handleChangeValue('', val)}
+              onSelect={val => handleChangeValue('end', val)}
               title="End"
             />
           </View>
@@ -120,9 +183,25 @@ const AddNewTask = ({navigation}: any) => {
           title="Members"
           multible
         />
+
+        <View>
+          <RowComponent justify="flex-start" onPress={handlePickerDocument}>
+            <TitleComponent text="Attachmets" flex={0} />
+            <SpaceComponent width={8} />
+            <AttachSquare size={16} color={colors.white} />
+          </RowComponent>
+          {attachments.length > 0 &&
+            attachments.map((item, index) => (
+              <RowComponent
+                key={`attachments${index}`}
+                styles={{paddingVertical: 12}}>
+                <TextComponent text={item.name ?? ''} />
+              </RowComponent>
+            ))}
+        </View>
       </SectionComponent>
       <SectionComponent>
-        <Button title="Save" onPress={handleAddNewTask} />
+        <ButtonComponent text="Save" onPress={handleAddNewTask} />
       </SectionComponent>
     </Container>
   );
